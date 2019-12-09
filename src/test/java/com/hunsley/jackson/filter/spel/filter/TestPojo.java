@@ -1,10 +1,10 @@
-package com.hunsley.jackson.filter.spel;
+package com.hunsley.jackson.filter.spel.filter;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Data;
 
 @Data
-@JsonFilter("conditional")
+@JsonFilter("spel")
 public class TestPojo {
 
   private String myStr;

@@ -1,4 +1,4 @@
-package com.hunsley.jackson.filter.spel;
+package com.hunsley.jackson.filter.spel.filter;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import java.lang.annotation.ElementType;

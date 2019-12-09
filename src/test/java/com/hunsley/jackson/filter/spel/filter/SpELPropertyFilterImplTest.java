@@ -1,4 +1,4 @@
-package com.hunsley.jackson.filter.spel;
+package com.hunsley.jackson.filter.spel.filter;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -18,7 +18,7 @@ public class SpELPropertyFilterImplTest {
     objectMapper = new ObjectMapper();
     objectMapper.setFilterProvider(
         new SimpleFilterProvider().addFilter(
-            "conditional", new SpELPropertyFilterImpl()));
+            "spel", new SpELPropertyFilterImpl()));
   }
 
   @Test
