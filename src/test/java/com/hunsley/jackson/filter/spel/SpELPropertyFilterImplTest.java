@@ -1,5 +1,9 @@
 package com.hunsley.jackson.filter.spel;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.junit.Before;
@@ -18,7 +22,14 @@ public class SpELPropertyFilterImplTest {
   }
 
   @Test
-  public void testBasicEvaluation() {
+  public void testBasicEvaluation() throws JsonProcessingException {
+    TestPojo pojo = new TestPojo();
+    pojo.setMyInt(1);
+    String json = objectMapper.writeValueAsString(pojo);
+    assertTrue(json.contains("myInt"));
 
+    pojo.setMyInt(0);
+    json = objectMapper.writeValueAsString(pojo);
+    assertFalse(json.contains("myInt"));
   }
 }

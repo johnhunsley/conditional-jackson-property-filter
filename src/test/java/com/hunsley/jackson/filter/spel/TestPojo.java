@@ -9,6 +9,6 @@ public class TestPojo {
 
   private String myStr;
 
-  @JsonFilterExpression("? > 0")
+  @JsonFilterExpression("#this.myInt > 0")
   private int myInt;
 }

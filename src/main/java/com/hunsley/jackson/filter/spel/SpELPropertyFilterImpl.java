@@ -13,6 +13,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelMessage;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 public class SpELPropertyFilterImpl implements PropertyFilter {
   private final ExpressionParser parser;
@@ -25,24 +26,32 @@ public class SpELPropertyFilterImpl implements PropertyFilter {
     this.parser = parser;
   }
 
+  /**
+   *
+   * @param obj
+   * @param jsonGenerator
+   * @param serializerProvider
+   * @param writer
+   * @throws Exception
+   */
   public void serializeAsField(Object obj, JsonGenerator jsonGenerator, SerializerProvider serializerProvider,
                                PropertyWriter writer) throws Exception {
-    Field field = obj.getClass().getField(writer.getName());
+    Field field = obj.getClass().getDeclaredField(writer.getName());
 
     if(field.isAnnotationPresent(JsonFilterExpression.class)) {
       JsonFilterExpression jsonFilterExpression = field.getAnnotation(JsonFilterExpression.class);
       Expression exp = parser.parseExpression(jsonFilterExpression.value());
+      StandardEvaluationContext  context = new StandardEvaluationContext();
+      context.setRootObject(obj);
 
-      if(!exp.getValueType().equals(Boolean.class)) {
+      if(!exp.getValueType(context).equals(Boolean.class)) {
         throw new SpelEvaluationException(SpelMessage.TYPE_CONVERSION_ERROR);
       }
 
-      if(exp.getValue(Boolean.class)) {
-        return;
+      if(exp.getValue(context, Boolean.class)) {
+        writer.serializeAsField(obj, jsonGenerator, serializerProvider);
       }
     }
-
-    writer.serializeAsField(obj, jsonGenerator, serializerProvider);
   }
 
   public void serializeAsElement(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider,
