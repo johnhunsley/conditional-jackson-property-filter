@@ -13,7 +13,9 @@
                 <version>3.8.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <release>11</release>
+                    <source>11</source>
+                    <target>11</target>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
         </plugins>
