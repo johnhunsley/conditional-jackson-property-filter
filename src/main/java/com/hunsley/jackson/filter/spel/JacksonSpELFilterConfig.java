@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 public class JacksonSpELFilterConfig {
+  public final static String SPEL_FILTER_NAME = "spel";
 
   @Bean
   public ObjectMapper objectMapper() {

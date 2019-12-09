@@ -1,5 +1,7 @@
 package com.hunsley.jackson.filter.spel;
 
+import static com.hunsley.jackson.filter.spel.JacksonSpELFilterConfig.SPEL_FILTER_NAME;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hunsley.jackson.filter.spel.filter.SpELPropertyFilterImpl;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class JacksonSpELFilterProcessor implements BeanPostProcessor {
-  public final static String SPEL_FILTER_NAME = "spel";
 
   @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

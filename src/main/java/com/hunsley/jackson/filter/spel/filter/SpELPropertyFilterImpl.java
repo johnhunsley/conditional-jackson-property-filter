@@ -14,9 +14,17 @@ import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelMessage;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.util.StringUtils;
 
-public class SpELPropertyFilterImpl implements PropertyFilter {
+/**
+ *
+ * @author jhunsley
+ */
+public final class SpELPropertyFilterImpl implements PropertyFilter {
   private final ExpressionParser parser;
+
+  private final String SPEL_SELF_REF_PREFIX = "#this";
+  private final String FIELD_REF = "\\?";
 
   public SpELPropertyFilterImpl() {
     parser = new SpelExpressionParser();
@@ -40,7 +48,7 @@ public class SpELPropertyFilterImpl implements PropertyFilter {
 
     if(field.isAnnotationPresent(JsonFilterExpression.class)) {
       JsonFilterExpression jsonFilterExpression = field.getAnnotation(JsonFilterExpression.class);
-      Expression exp = parser.parseExpression(jsonFilterExpression.value());
+      Expression exp = parser.parseExpression(substituteFiledRef(jsonFilterExpression.value(), field));
       StandardEvaluationContext  context = new StandardEvaluationContext();
       context.setRootObject(obj);
 
@@ -48,10 +56,20 @@ public class SpELPropertyFilterImpl implements PropertyFilter {
         throw new SpelEvaluationException(SpelMessage.TYPE_CONVERSION_ERROR);
       }
 
-      if(exp.getValue(context, Boolean.class)) {
-        writer.serializeAsField(obj, jsonGenerator, serializerProvider);
+      if(!exp.getValue(context, Boolean.class)) {
+        return;
       }
     }
+
+    writer.serializeAsField(obj, jsonGenerator, serializerProvider);
+  }
+
+  /**
+   * replaces the self ref wildcard '?' with the ref to the variable by name - #this.<fieldName>
+   */
+  private String substituteFiledRef(final String expression, Field field) {
+    assert !StringUtils.isEmpty(expression);
+    return expression.replaceAll(FIELD_REF, SPEL_SELF_REF_PREFIX+"."+field.getName());
   }
 
   public void serializeAsElement(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider,

@@ -1,5 +1,6 @@
 package com.hunsley.jackson.filter.spel.filter;
 
+import static com.hunsley.jackson.filter.spel.JacksonSpELFilterConfig.SPEL_FILTER_NAME;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
@@ -18,18 +19,23 @@ public class SpELPropertyFilterImplTest {
     objectMapper = new ObjectMapper();
     objectMapper.setFilterProvider(
         new SimpleFilterProvider().addFilter(
-            "spel", new SpELPropertyFilterImpl()));
+            SPEL_FILTER_NAME, new SpELPropertyFilterImpl()));
   }
 
   @Test
-  public void testBasicEvaluation() throws JsonProcessingException {
+  public void testSefRefEvaluation() throws JsonProcessingException {
     TestPojo pojo = new TestPojo();
-    pojo.setMyInt(1);
     String json = objectMapper.writeValueAsString(pojo);
-    assertTrue(json.contains("myInt"));
+    assertFalse(json.contains("myInt"));
 
-    pojo.setMyInt(0);
+    pojo.setMyInt(1);
     json = objectMapper.writeValueAsString(pojo);
     assertFalse(json.contains("myInt"));
+
+    pojo.setMyStr("foobar");
+    json = objectMapper.writeValueAsString(pojo);
+    assertTrue(json.contains("myInt"));
+    assertTrue(json.contains("myStr"));
+    System.out.println(json);
   }
 }

@@ -1,14 +1,18 @@
 package com.hunsley.jackson.filter.spel.filter;
 
+
+import static com.hunsley.jackson.filter.spel.JacksonSpELFilterConfig.SPEL_FILTER_NAME;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Data;
 
 @Data
-@JsonFilter("spel")
+@JsonFilter(SPEL_FILTER_NAME)
 public class TestPojo {
 
+  @JsonFilterExpression("? != null")
   private String myStr;
 
-  @JsonFilterExpression("#this.myInt > 0")
+  @JsonFilterExpression("? > 0 && #this.myStr != null")
   private int myInt;
 }
