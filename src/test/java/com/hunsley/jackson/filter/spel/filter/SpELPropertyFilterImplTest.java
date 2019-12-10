@@ -25,14 +25,20 @@ public class SpELPropertyFilterImplTest {
   @Test
   public void testSefRefEvaluation() throws JsonProcessingException {
     TestPojo pojo = new TestPojo();
+    pojo.setMyStr("bar");
     String json = objectMapper.writeValueAsString(pojo);
     assertFalse(json.contains("myInt"));
+    assertTrue(json.contains("myStr"));
+    System.out.println(json);
 
     pojo.setMyInt(1);
+    pojo.setMyStr(null);
     json = objectMapper.writeValueAsString(pojo);
     assertFalse(json.contains("myInt"));
+    assertFalse(json.contains("myStr"));
+    System.out.println(json);
 
-    pojo.setMyStr("foobar");
+    pojo.setMyStr("foo");
     json = objectMapper.writeValueAsString(pojo);
     assertTrue(json.contains("myInt"));
     assertTrue(json.contains("myStr"));

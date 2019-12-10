@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({})
+@Import({JacksonSpELFilterConfig.class})
 @JacksonAnnotation
 public @interface EnableJacksonSpELFilter {
 }
